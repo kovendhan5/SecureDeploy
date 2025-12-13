@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <title>PipeGuard Pro - Live Demo</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .demo-banner {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            color: white;
+            text-align: center;
+            padding: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .demo-banner i {
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 45px;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 2rem;
+            -webkit-text-fill-color: #667eea;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            padding: 0.6rem;
+            border-radius: 12px;
+        }
+
+        .success { color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .danger { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+        .warning { color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+        .info { color: #3b82f6; background: rgba(59, 130, 246, 0.1); }
+
+        .stat-value {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .runs-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .runs-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .runs-list::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .runs-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .runs-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .run-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            background: #f8fafc;
+        }
+
+        .run-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .run-item.success {
+            border-left-color: #10b981;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.05), transparent);
+        }
+
+        .run-item.failure {
+            border-left-color: #ef4444;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent);
+        }
+
+        .run-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .run-id {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .run-branch {
+            font-size: 0.85rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .run-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .status-badge.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.failure {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .run-duration {
+            font-weight: 700;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .anomaly-item {
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .anomaly-item.critical {
+            border-left-color: #ef4444;
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1), transparent);
+        }
+
+        .anomaly-item.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), transparent);
+        }
+
+        .anomaly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .anomaly-type {
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .anomaly-type.critical { color: #dc2626; }
+        .anomaly-type.warning { color: #d97706; }
+
+        .severity-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .severity-badge.warning {
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .anomaly-description {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .anomaly-fix {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .anomaly-fix i {
+            color: #10b981;
+            margin-top: 0.2rem;
+        }
+
+        .charts-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 1.5rem;
+        }
+
+        .insights-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-description {
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .impact-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .impact-badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .impact-high {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .impact-medium {
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .impact-low {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .effort-badge {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .no-anomalies {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #10b981;
+        }
+
+        .no-anomalies i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .no-anomalies h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-anomalies p {
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        .update-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .update-toast.show {
+            display: flex;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .demo-controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .demo-controls h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Mode Banner -->
+    <div class="demo-banner">
+        <i class="fas fa-flask"></i>
+        DEMO MODE - Live Data Simulation | Data updates every 10 seconds
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                PipeGuard Pro
+            </div>
+            <div class="nav-actions">
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>LIVE</span>
+                </div>
+                <button class="btn btn-primary" onclick="manualRefresh()">
+                    <i class="fas fa-sync-alt"></i> Refresh Now
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Update Toast -->
+    <div class="update-toast" id="updateToast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Data updated successfully</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>🚀 Real-Time Pipeline Monitoring</h1>
+            <p>Live demonstration with automated data updates and anomaly detection</p>
+        </div>
+
+        <!-- Demo Controls -->
+        <div class="demo-controls">
+            <h3>
+                <i class="fas fa-gamepad"></i>
+                Interactive Demo Controls
+            </h3>
+            <div class="control-buttons">
+                <button class="btn btn-success" onclick="addSuccessRun()">
+                    <i class="fas fa-check-circle"></i> Add Success Build
+                </button>
+                <button class="btn btn-danger" onclick="addFailureRun()">
+                    <i class="fas fa-times-circle"></i> Add Failure Build
+                </button>
+                <button class="btn btn-primary" onclick="manualRefresh()">
+                    <i class="fas fa-sync-alt"></i> Force Update
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Total Runs</span>
+                    <div class="stat-icon success">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalRuns">{{ stats.total_runs }}</div>
+                <div class="stat-trend success">
+                    <i class="fas fa-arrow-up"></i> Active monitoring
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Success Rate</span>
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="successRate">{{ "%.1f"|format(stats.success_rate) }}%</div>
+                <div class="stat-trend success">
+                    <i class="fas fa-chart-line"></i> Trending
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Avg Duration</span>
+                    <div class="stat-icon info">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="avgDuration">{{ "%.1f"|format(stats.avg_duration) }}s</div>
+                <div class="stat-trend info">
+                    <i class="fas fa-tachometer-alt"></i> Performance
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Active Alerts</span>
+                    <div class="stat-icon {{ 'danger' if stats.active_alerts > 0 else 'success' }}">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="activeAlerts">{{ stats.active_alerts }}</div>
+                <div class="stat-trend {{ 'danger' if stats.active_alerts > 0 else 'success' }}">
+                    <i class="fas fa-shield-alt"></i> Monitoring
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="main-content">
+            <!-- Recent Runs -->
+            <div class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-history"></i>
+                    Recent Pipeline Runs
+                </h2>
+                <div class="runs-list" id="runsList">
+                    {% for run in runs %}
+                    <div class="run-item {{ run.status }}">
+                        <div class="run-info">
+                            <div class="run-id">#{{ run.id }} - {{ run.workflow }}</div>
+                            <div class="run-branch">
+                                <i class="fas fa-code-branch"></i> {{ run.branch }}
+                                <span style="margin-left: 0.5rem;">•</span>
+                                <i class="fas fa-user" style="margin-left: 0.5rem;"></i> {{ run.author }}
+                            </div>
+                        </div>
+                        <div class="run-meta">
+                            <span class="status-badge {{ run.status }}">
+                                {% if run.status == 'success' %}
+                                    <i class="fas fa-check"></i> Success
+                                {% else %}
+                                    <i class="fas fa-times"></i> Failed
+                                {% endif %}
+                            </span>
+                            <span class="run-duration">{{ run.duration }}s</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Anomalies & Alerts -->
+            <div class="section-card">
+                <h2 class="section-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Anomalies & Alerts
+                </h2>
+                <div id="anomaliesList">
+                    {% if anomalies %}
+                        {% for anomaly in anomalies %}
+                        <div class="anomaly-item {{ anomaly.severity }}">
+                            <div class="anomaly-header">
+                                <div class="anomaly-type {{ anomaly.severity }}">
+                                    <i class="fas fa-bug"></i>
+                                    {{ anomaly.type }}
+                                </div>
+                                <span class="severity-badge {{ anomaly.severity }}">
+                                    {{ anomaly.severity }}
+                                </span>
+                            </div>
+                            <div class="anomaly-description">
+                                {{ anomaly.issue }}
+                            </div>
+                            <div class="anomaly-fix">
+                                <i class="fas fa-lightbulb"></i>
+                                <div>
+                                    <strong>Suggested Fix:</strong><br>
+                                    {{ anomaly.fix }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-anomalies">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>All Systems Healthy!</h3>
+                            <p>No anomalies detected in recent runs</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                Performance Analytics - Live View
+            </h2>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- AI Insights Section -->
+        <div class="insights-section">
+            <h2 class="section-title">
+                <i class="fas fa-brain"></i>
+                AI-Powered Insights & Recommendations
+            </h2>
+            <div id="insightsContainer">
+                {% if insights.recommendations %}
+                    {% for recommendation in insights.recommendations %}
+                    <div class="insight-card">
+                        <div class="insight-title">
+                            <i class="fas fa-lightbulb"></i>
+                            {{ recommendation.title }}
+                        </div>
+                        <div class="insight-description">
+                            {{ recommendation.description }}
+                        </div>
+                        <div class="impact-badges">
+                            <span class="impact-badge impact-{{ recommendation.impact }}">
+                                Impact: {{ recommendation.impact }}
+                            </span>
+                            <span class="impact-badge effort-badge">
+                                Effort: {{ recommendation.effort }}
+                            </span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 PipeGuard Pro - Advanced CI/CD Pipeline Monitoring | Demo Mode Active</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+            Auto-refreshing every 10 seconds • All data is simulated for demonstration
+        </p>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Chart initialization
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        let performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{% for run in runs %}'#{{ run.id }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                datasets: [{
+                    label: 'Build Duration (seconds)',
+                    data: [{% for run in runs %}{{ run.duration }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 13, weight: '600' }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Pipeline Runs (Most Recent)',
+                            font: { size: 14, weight: '600' }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Duration (seconds)',
+                            font: { size: 14, weight: '600' }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                        beginAtZero: true
+                    }
+                },
+                animation: {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+
+        // Auto-refresh functionality
+        function showToast(message) {
+            const toast = document.getElementById('updateToast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch('/api/live-update');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update statistics
+                    document.getElementById('totalRuns').textContent = data.stats.total_runs;
+                    document.getElementById('successRate').textContent = data.stats.success_rate + '%';
+                    document.getElementById('avgDuration').textContent = data.stats.avg_duration + 's';
+                    document.getElementById('activeAlerts').textContent = data.stats.active_alerts;
+                    
+                    console.log('Dashboard updated:', data.timestamp);
+                }
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+            }
+        }
+
+        async function manualRefresh() {
+            showToast('Refreshing data...');
+            await updateDashboard();
+            
+            // Reload page to show new runs
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        }
+
+        async function addSuccessRun() {
+            showToast('Adding successful build...');
+            await fetch('/api/add-demo-run?status=success');
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        async function addFailureRun() {
+            showToast('Adding failed build...');
+            await fetch('/api/add-demo-run?status=failure');
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        // Start auto-refresh
+        setInterval(updateDashboard, 10000); // Update every 10 seconds
+
+        // Initial animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            showToast('🚀 Live demo active - data updates every 10 seconds');
+        });
+
+        // Update page title with live indicator
+        let titleBlink = true;
+        setInterval(() => {
+            document.title = titleBlink ? '🔴 PipeGuard Pro - Live Demo' : '⚫ PipeGuard Pro - Live Demo';
+            titleBlink = !titleBlink;
+        }, 1000);
+    </script>
+</body>
+</html>
