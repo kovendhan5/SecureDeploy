@@ -43,8 +43,8 @@ demo_generator = DemoDataGenerator()
 
 # Generate initial demo data
 demo_runs = demo_generator.generate_runs(25)
-demo_anomalies = demo_generator.detect_anomalies(demo_runs)
-demo_insights = demo_generator.generate_ai_insights(demo_runs, demo_anomalies)
+Enhanced Demo Application for PipeGuard
+Provides a realistic real-time monitoring showcase backed by a live data feeder.
 
 @app.after_request
 def add_security_headers(response):
@@ -57,6 +57,11 @@ def add_security_headers(response):
 @app.route('/')
 def index():
     """Render the main dashboard"""
+import atexit
+import json
+import threading
+import time
+
     logger.info("Dashboard accessed")
     
     # Get latest runs for display
@@ -68,7 +73,8 @@ def index():
     success_rate = (success_count / total_runs * 100) if total_runs > 0 else 0
     avg_duration = sum(run['duration'] for run in demo_runs) / total_runs if total_runs > 0 else 0
     
-    return render_template('realistic_demo.html',
+    return render_template('demo_dashboard.html',
+app.config['JSON_SORT_KEYS'] = False  # Preserve ordering for UI updates
                          runs=runs,
                          anomalies=demo_anomalies[:5],
                          insights=demo_insights,
@@ -76,11 +82,9 @@ def index():
                              'total_runs': total_runs,
                              'success_rate': success_rate,
                              'avg_duration': avg_duration,
-                             'active_alerts': len(demo_anomalies),
-                             'running': sum(1 for run in demo_runs[-5:] if run.get('status') == 'running')
+                             'active_alerts': len(demo_anomalies)
                          },
-                         demo_mode=True,
-                         random=__import__('random'))
+                         demo_mode=True)
 
 @app.route('/api/live-update')
 @limiter.limit("60 per minute")
@@ -90,6 +94,17 @@ def live_update():
     if random.random() < 0.3:  # 30% chance of new run
         new_run = demo_generator.generate_run()
         demo_runs.append(new_run)
+data_lock = threading.Lock()
+stop_event = threading.Event()
+data_thread = None
+
+MAX_RUN_HISTORY = 200
+RECENT_SAMPLE_SIZE = 40
+DEFAULT_RECENT_WINDOW = 20
+
+demo_runs = []
+demo_anomalies = []
+demo_insights = {}
         
         # Keep only recent runs
         if len(demo_runs) > 50:
@@ -174,6 +189,8 @@ def add_demo_run():
     """Manually add a demo run (for demonstration purposes)"""
     status = request.args.get('status', None)
     new_run = demo_generator.generate_run(status)
+_initialize_demo_state()
+atexit.register(_shutdown_background_tasks)
     demo_runs.append(new_run)
     
     # Update anomalies
