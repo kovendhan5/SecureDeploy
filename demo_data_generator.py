@@ -17,36 +17,184 @@ class DemoDataGenerator:
         self.workflows = ['CI/CD Pipeline', 'Test Suite', 'Deploy Production', 'Security Scan', 'Code Quality']
         self.authors = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']
         
+        # Build steps with realistic durations
+        self.build_steps = [
+            {'name': 'Checkout Code', 'duration_range': (2, 5)},
+            {'name': 'Setup Python 3.11', 'duration_range': (10, 15)},
+            {'name': 'Install Dependencies', 'duration_range': (20, 45)},
+            {'name': 'Lint Code', 'duration_range': (5, 10)},
+            {'name': 'Run Unit Tests', 'duration_range': (15, 30)},
+            {'name': 'Run Integration Tests', 'duration_range': (20, 40)},
+            {'name': 'Build Docker Image', 'duration_range': (25, 60)},
+            {'name': 'Security Scan', 'duration_range': (10, 20)},
+            {'name': 'Deploy to Staging', 'duration_range': (15, 25)}
+        ]
+        
+        # Sample log messages
+        self.log_templates = {
+            'success': [
+                "✓ All tests passed successfully",
+                "✓ Build completed without errors",
+                "✓ No security vulnerabilities found",
+                "✓ Code coverage: {coverage}%",
+                "✓ Deployment successful"
+            ],
+            'failure': [
+                "✗ Test suite failed: 3 tests failed",
+                "✗ Build error: Module 'app' not found",
+                "✗ Security vulnerability detected: CVE-2024-12345",
+                "✗ Code coverage below threshold: {coverage}%",
+                "✗ Deployment failed: Connection timeout"
+            ],
+            'warning': [
+                "⚠ Deprecated dependency: flask 2.0.0",
+                "⚠ High memory usage detected",
+                "⚠ Slow test execution: test_integration.py"
+            ]
+        }
+        
+        # Sample code changes
+        self.code_changes = [
+            {
+                'file': 'app.py',
+                'additions': random.randint(10, 50),
+                'deletions': random.randint(5, 30),
+                'changes': [
+                    '+ def process_payment(amount, currency):',
+                    '+     """Process payment with validation"""',
+                    '+     if amount <= 0:',
+                    '+         raise ValueError("Invalid amount")',
+                    '-     return process(amount)  # Old method'
+                ]
+            },
+            {
+                'file': 'tests/test_api.py',
+                'additions': random.randint(15, 40),
+                'deletions': random.randint(3, 15),
+                'changes': [
+                    '+ def test_payment_validation():',
+                    '+     with pytest.raises(ValueError):',
+                    '+         process_payment(-100, "USD")'
+                ]
+            }
+        ]
+        
     def generate_run(self, status=None):
         """Generate a single pipeline run with realistic data"""
         if status is None:
             # 75% success rate for realistic demo
             status = 'success' if random.random() < 0.75 else 'failure'
         
-        # Base duration depends on status
-        if status == 'success':
-            duration = random.randint(60, 180)  # 1-3 minutes
-        else:
-            duration = random.randint(30, 120)  # Failures often faster
+        # Generate build steps with timing
+        steps = []
+        total_duration = 0
+        
+        for step_template in self.build_steps:
+            step_duration = random.randint(*step_template['duration_range'])
+            step_status = status if step_template == self.build_steps[-1] else 'success'
+            
+            # If this is a failure run, fail at a random step
+            if status == 'failure' and random.random() < 0.3:
+                step_status = 'failure'
+                steps.append({
+                    'name': step_template['name'],
+                    'duration': step_duration,
+                    'status': step_status
+                })
+                total_duration += step_duration
+                break
+            
+            steps.append({
+                'name': step_template['name'],
+                'duration': step_duration,
+                'status': step_status
+            })
+            total_duration += step_duration
         
         # Add some anomalies
         if random.random() < 0.1:  # 10% chance of slow build
-            duration += random.randint(100, 300)
+            total_duration += random.randint(100, 300)
+        
+        # Generate logs
+        logs = []
+        if status == 'success':
+            logs = [random.choice(self.log_templates['success']) for _ in range(3)]
+            logs.append(f"✓ Code coverage: {random.randint(75, 95)}%")
+        else:
+            logs = [random.choice(self.log_templates['failure']) for _ in range(2)]
+            logs.append(f"✗ Failed at step: {steps[-1]['name']}")
+        
+        # Add warnings occasionally
+        if random.random() < 0.3:
+            logs.append(random.choice(self.log_templates['warning']))
+        
+        # Select random code change
+        code_change = random.choice(self.code_changes)
         
         run = {
             'id': self.run_counter,
             'run_id': f'run-{self.run_counter}',
             'status': status,
-            'duration': duration,
+            'duration': total_duration,
             'branch': random.choice(self.branches),
             'workflow': random.choice(self.workflows),
             'author': random.choice(self.authors),
             'timestamp': (datetime.now() - timedelta(minutes=self.run_counter * 10)).isoformat(),
-            'commit': f'{random.randint(100000, 999999):x}'[:7]
+            'commit': f'{random.randint(100000, 999999):x}'[:7],
+            'commit_message': self._generate_commit_message(status),
+            'steps': steps,
+            'logs': logs,
+            'code_changes': {
+                'files_changed': random.randint(1, 5),
+                'additions': code_change['additions'],
+                'deletions': code_change['deletions'],
+                'example_file': code_change['file'],
+                'example_changes': code_change['changes'][:3]
+            },
+            'test_results': self._generate_test_results(status),
+            'artifacts': [
+                {'name': 'coverage-report.html', 'size': f'{random.randint(10, 500)}KB'},
+                {'name': 'test-results.xml', 'size': f'{random.randint(5, 50)}KB'}
+            ] if status == 'success' else []
         }
         
         self.run_counter += 1
         return run
+    
+    def _generate_commit_message(self, status):
+        """Generate realistic commit messages"""
+        messages = [
+            "feat: Add payment processing module",
+            "fix: Resolve authentication bug",
+            "refactor: Improve database queries",
+            "test: Add integration tests",
+            "docs: Update API documentation",
+            "chore: Update dependencies",
+            "perf: Optimize image loading",
+            "security: Fix XSS vulnerability"
+        ]
+        return random.choice(messages)
+    
+    def _generate_test_results(self, status):
+        """Generate realistic test results"""
+        total_tests = random.randint(50, 150)
+        
+        if status == 'success':
+            passed = total_tests
+            failed = 0
+            skipped = random.randint(0, 5)
+        else:
+            passed = random.randint(int(total_tests * 0.6), total_tests - 3)
+            failed = total_tests - passed
+            skipped = random.randint(0, 3)
+        
+        return {
+            'total': total_tests,
+            'passed': passed,
+            'failed': failed,
+            'skipped': skipped,
+            'duration': random.randint(15, 60)
+        }
     
     def generate_runs(self, count=20):
         """Generate multiple pipeline runs"""

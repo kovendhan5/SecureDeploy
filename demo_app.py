@@ -68,7 +68,7 @@ def index():
     success_rate = (success_count / total_runs * 100) if total_runs > 0 else 0
     avg_duration = sum(run['duration'] for run in demo_runs) / total_runs if total_runs > 0 else 0
     
-    return render_template('demo_dashboard.html',
+    return render_template('realistic_demo.html',
                          runs=runs,
                          anomalies=demo_anomalies[:5],
                          insights=demo_insights,
@@ -76,9 +76,11 @@ def index():
                              'total_runs': total_runs,
                              'success_rate': success_rate,
                              'avg_duration': avg_duration,
-                             'active_alerts': len(demo_anomalies)
+                             'active_alerts': len(demo_anomalies),
+                             'running': sum(1 for run in demo_runs[-5:] if run.get('status') == 'running')
                          },
-                         demo_mode=True)
+                         demo_mode=True,
+                         random=__import__('random'))
 
 @app.route('/api/live-update')
 @limiter.limit("60 per minute")
