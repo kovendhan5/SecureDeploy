@@ -289,3 +289,8 @@
 2025-06-17 19:41:08,947 - flask-limiter - INFO - ratelimit 30 per 1 minute (127.0.0.1) exceeded at endpoint: dashboard
 2025-06-17 19:41:08,947 - app - WARNING - Rate limit exceeded: 127.0.0.1 - http://localhost/
 2025-06-17 19:41:08,958 - app - INFO - Page not found: 127.0.0.1 - http://localhost/nonexistent
+2025-12-13 09:39:48,571 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.174.65.177:8080
+2025-12-13 09:39:48,571 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

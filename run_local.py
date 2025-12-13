@@ -43,19 +43,24 @@ def check_dependencies():
     """Check if all required dependencies are installed."""
     print("📦 Checking dependencies...")
     
-    required_packages = [
-        'flask', 'pytest', 'google-cloud-firestore', 
-        'requests', 'python-dotenv', 'functions-framework'
-    ]
+    # Map package names to their import names
+    required_packages = {
+        'flask': 'flask',
+        'pytest': 'pytest',
+        'google-cloud-firestore': 'google.cloud.firestore',
+        'requests': 'requests',
+        'python-dotenv': 'dotenv',
+        'functions-framework': 'functions_framework'
+    }
     
     missing_packages = []
-    for package in required_packages:
+    for package_name, import_name in required_packages.items():
         try:
-            __import__(package.replace('-', '_'))
-            print(f"  ✅ {package}")
+            __import__(import_name)
+            print(f"  ✅ {package_name}")
         except ImportError:
-            missing_packages.append(package)
-            print(f"  ❌ {package}")
+            missing_packages.append(package_name)
+            print(f"  ❌ {package_name}")
     
     if missing_packages:
         print(f"\n⚠️  Missing packages: {', '.join(missing_packages)}")
