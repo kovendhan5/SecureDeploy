@@ -17,7 +17,7 @@ class DemoDataGenerator:
         self.workflows = ['CI/CD Pipeline', 'Test Suite', 'Deploy Production', 'Security Scan', 'Code Quality']
         self.authors = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve']
         
-    def generate_run(self, status=None):
+    def generate_run(self, status=None, offset_minutes=0):
         """Generate a single pipeline run with realistic data"""
         if status is None:
             # 75% success rate for realistic demo
@@ -33,6 +33,9 @@ class DemoDataGenerator:
         if random.random() < 0.1:  # 10% chance of slow build
             duration += random.randint(100, 300)
         
+        finished_at = datetime.now() - timedelta(minutes=offset_minutes)
+        started_at = finished_at - timedelta(seconds=duration)
+
         run = {
             'id': self.run_counter,
             'run_id': f'run-{self.run_counter}',
@@ -41,7 +44,9 @@ class DemoDataGenerator:
             'branch': random.choice(self.branches),
             'workflow': random.choice(self.workflows),
             'author': random.choice(self.authors),
-            'timestamp': (datetime.now() - timedelta(minutes=self.run_counter * 10)).isoformat(),
+            'timestamp': finished_at.isoformat(),
+            'started_at': started_at.isoformat(),
+            'finished_at': finished_at.isoformat(),
             'commit': f'{random.randint(100000, 999999):x}'[:7]
         }
         
@@ -51,8 +56,12 @@ class DemoDataGenerator:
     def generate_runs(self, count=20):
         """Generate multiple pipeline runs"""
         runs = []
+        offset = random.randint(count * 4, count * 8)
+
         for _ in range(count):
-            runs.append(self.generate_run())
+            runs.append(self.generate_run(offset_minutes=offset))
+            offset = max(0, offset - random.randint(5, 12))
+
         return runs
     
     def detect_anomalies(self, runs):

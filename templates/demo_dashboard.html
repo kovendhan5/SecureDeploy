@@ -177,6 +177,12 @@
             opacity: 0.95;
         }
 
+        .last-updated {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -257,6 +263,54 @@
             margin-bottom: 2rem;
         }
 
+        .metrics-panel {
+            margin-bottom: 2rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: inset 0 0 0 1px rgba(102, 126, 234, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            transition: transform 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .metric-meta {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
         .section-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -326,6 +380,26 @@
             background: linear-gradient(90deg, rgba(239, 68, 68, 0.05), transparent);
         }
 
+        .run-item.fresh {
+            position: relative;
+            border-left-color: #2563eb;
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), transparent);
+        }
+
+        .run-item.fresh::after {
+            content: 'NEW';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #3b82f6;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+        }
+
         .run-info {
             display: flex;
             flex-direction: column;
@@ -350,6 +424,21 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+        }
+
+        .run-meta-sub {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.4rem;
+        }
+
+        .run-meta-sub span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .status-badge {
@@ -488,6 +577,56 @@
             border-radius: 12px;
             margin-bottom: 1rem;
             border-left: 4px solid #3b82f6;
+        }
+
+        .insight-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .insight-group h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .insight-list li {
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #3730a3;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .insight-pill-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .insight-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         .insight-title {
