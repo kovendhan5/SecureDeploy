@@ -1,0 +1,13 @@
+# Terraform variables file (optional - can be set via CLI or environment)
+# Uncomment and customize as needed
+
+# azure_region = "East US"
+# project_name = "securedeploy"
+# environment  = "prod"
+
+# tags = {
+#   project     = "securedeploy"
+#   environment = "prod"
+#   owner       = "DevOps"
+#   created_by  = "terraform"
+# }

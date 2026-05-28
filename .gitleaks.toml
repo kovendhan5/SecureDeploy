@@ -1,0 +1,23 @@
+title = "SecureDeploy GitLeaks Config"
+description = "GitLeaks configuration for detecting secrets in source code"
+
+[allowlist]
+description = "Allowlist for false positives"
+paths = ["(?i)tests/.*", "(?i).*\\.md", "^\\.trivyignore$"]
+commits = [""]
+repos = [""]
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API key"
+regex = '''(?i)api[_-]?key\s*[=:]\s*['\"]?[a-zA-Z0-9\-_]{20,}['\"]?'''
+entropyRange = [3.5, 8.0]
+keywords = ["api", "key", "password", "secret", "token"]
+allowlist  = {}
+
+[[rules]]
+id = "aws-access-key"
+description = "AWS access key"
+regex = "AKIA[0-9A-Z]{16}"
+entropyRange = [3.5, 8.0]
+keywords = ["aws", "access"]

@@ -1,0 +1,8 @@
+# Trivy CVE exceptions
+# Format: [hash]
+# Add CVE IDs for false positives or accepted risks
+# Example to ignore a specific CVE:
+# CVE-2021-12345
+
+# Student tier: accepting base image vulnerabilities that are not critical
+# These will be re-evaluated in production environments

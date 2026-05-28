@@ -1,0 +1,125 @@
+name: CD - Deploy to AKS
+
+on:
+  workflow_run:
+    workflows: ["CI - Build, Test & Scan"]
+    types:
+      - completed
+    branches:
+      - main
+
+env:
+  REGISTRY: ${{ secrets.ACR_LOGIN_SERVER }}
+  IMAGE_NAME: securedeploy
+  IMAGE_TAG: ${{ github.event.workflow_run.head_commit }}
+  AKS_RESOURCE_GROUP: ${{ secrets.AKS_RESOURCE_GROUP }}
+  AKS_CLUSTER_NAME: ${{ secrets.AKS_CLUSTER_NAME }}
+  DEPLOYMENT_NAMESPACE: default
+  DEPLOYMENT_NAME: securedeploy-app
+
+jobs:
+  deploy:
+    name: Deploy to AKS
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials \
+            --resource-group ${{ env.AKS_RESOURCE_GROUP }} \
+            --name ${{ env.AKS_CLUSTER_NAME }} \
+            --file $HOME/.kube/config
+
+      - name: Apply Kubernetes manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/hpa.yaml
+
+      - name: Update image in deployment
+        run: |
+          kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} \
+            ${{ env.DEPLOYMENT_NAME }}=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            --record
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            --timeout=5m
+
+      - name: Get deployment info
+        run: |
+          kubectl get deployment ${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            -o wide
+
+      - name: Get pod details
+        run: |
+          kubectl get pods \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            -l app=${{ env.DEPLOYMENT_NAME }} \
+            -o wide
+
+      - name: Wait for pods to be ready
+        run: |
+          kubectl wait --for=condition=ready pod \
+            -l app=${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            --timeout=3m
+
+      - name: Port forward for local testing
+        run: |
+          kubectl port-forward \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            svc/${{ env.DEPLOYMENT_NAME }} 8000:8000 &
+          sleep 5
+          echo "Port forwarding active"
+
+      - name: Smoke test - Health check
+        run: |
+          for i in {1..10}; do
+            echo "Attempt $i..."
+            if curl -f http://localhost:8000/health; then
+              echo "✅ Health check passed"
+              exit 0
+            fi
+            sleep 6
+          done
+          echo "❌ Health check failed after 60 seconds"
+          exit 1
+
+      - name: Smoke test - Root endpoint
+        run: |
+          curl -f http://localhost:8000/ | jq .
+          echo "✅ Root endpoint available"
+
+      - name: Deployment successful
+        run: |
+          echo "✅ Deployment to AKS completed successfully"
+          echo "App deployed: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "❌ Deployment failed, rolling back..."
+          kubectl rollout undo deployment/${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }}
+          kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} \
+            -n ${{ env.DEPLOYMENT_NAMESPACE }} \
+            --timeout=5m
+          echo "⏮️ Rollback completed"
+
+      - name: Logout from Azure
+        run: |
+          az logout

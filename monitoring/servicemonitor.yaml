@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: securedeploy-app
+  namespace: default
+  labels:
+    app: securedeploy-app
+spec:
+  selector:
+    matchLabels:
+      app: securedeploy-app
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics

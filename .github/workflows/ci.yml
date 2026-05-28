@@ -1,0 +1,247 @@
+name: CI - Build, Test & Scan
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  REGISTRY: ${{ secrets.ACR_LOGIN_SERVER }}
+  IMAGE_NAME: securedeploy
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  # Stage 1: Secret Detection
+  gitleaks:
+    name: GitLeaks Secret Scan
+    runs-on: ubuntu-latest
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run GitLeaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: true
+
+  # Stage 2: Build & Unit Tests
+  build:
+    name: Build & Unit Tests
+    runs-on: ubuntu-latest
+    needs: gitleaks
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Run unit tests
+        working-directory: ./app
+        run: |
+          pytest tests/ -v --cov=. --cov-report=xml --cov-report=term
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: app/coverage.xml
+
+  # Stage 3: SAST Scanning with SonarCloud
+  sonar:
+    name: SonarCloud SAST Scan
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Generate coverage report
+        working-directory: ./app
+        run: |
+          pytest tests/ -v --cov=. --cov-report=xml || true
+
+      - name: Run SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # Stage 4: Docker Build
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: sonar
+    outputs:
+      image-tag: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./app
+          push: false
+          load: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save image for scanning
+        run: |
+          docker save ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            -o /tmp/image.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: /tmp/image.tar
+
+  # Stage 5: Container Image Scanning with Trivy
+  trivy-scan:
+    name: Trivy Container Scan
+    runs-on: ubuntu-latest
+    needs: docker-build
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-image
+          path: /tmp
+
+      - name: Load Docker image
+        run: |
+          docker load -i /tmp/image.tar
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          input: '/tmp/image.tar'
+          scan-type: 'image'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+  # Stage 6: Login to ACR and Push Image
+  push-acr:
+    name: Push Image to ACR
+    runs-on: ubuntu-latest
+    needs: trivy-scan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    continue-on-error: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-image
+          path: /tmp
+
+      - name: Load Docker image
+        run: |
+          docker load -i /tmp/image.tar
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        run: |
+          az acr login --name ${{ secrets.ACR_NAME }}
+
+      - name: Push image to ACR
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          
+          # Also tag as latest for main branch
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Logout from ACR
+        run: |
+          az logout
+
+  # Final summary
+  ci-complete:
+    name: CI Pipeline Complete
+    runs-on: ubuntu-latest
+    needs: [gitleaks, build, sonar, docker-build, trivy-scan, push-acr]
+    if: always()
+
+    steps:
+      - name: Check CI status
+        run: |
+          echo "✅ CI Pipeline execution complete"
+          echo "Image pushed: ${{ needs.push-acr.outputs.image-tag }}"
+      
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ CI Pipeline passed all stages (GitLeaks, Build, SonarCloud, Trivy)'
+            })

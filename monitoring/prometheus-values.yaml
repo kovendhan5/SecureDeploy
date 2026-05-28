@@ -1,0 +1,94 @@
+nameserver: kube-prometheus
+replicaCount: 1
+
+prometheus:
+  enabled: true
+  
+  prometheusSpec:
+    retention: 7d
+    retentionSize: "1GB"
+    
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+    
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+grafana:
+  enabled: true
+  
+  # Generate secure password: use `openssl rand -base64 32`
+  # Then set it via: helm install ... --set grafana.adminPassword="<generated_password>"
+  # For now, Grafana will generate a random password - check with: kubectl get secret -n monitoring grafana -o jsonpath="{.data.admin-password}" | base64 -d
+  adminPassword: ""  # Empty = auto-generated, retrieve from secret after deployment
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  
+  persistence:
+    enabled: true
+    size: 10Gi
+  
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-operated:9090
+        access: proxy
+        isDefault: true
+
+alertmanager:
+  enabled: true
+  
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      receiver: 'null'
+    receivers:
+    - name: 'null'
+
+prometheus-node-exporter:
+  enabled: true
+
+kube-state-metrics:
+  enabled: true
+
+kubeApiServer:
+  enabled: true
+
+kubeControllerManager:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false

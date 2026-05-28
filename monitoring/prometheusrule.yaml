@@ -1,0 +1,40 @@
+# PrometheusRule for alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: securedeploy-alerts
+  namespace: default
+spec:
+  groups:
+  - name: securedeploy.rules
+    interval: 30s
+    rules:
+    - alert: HighErrorRate
+      expr: |
+        (sum(rate(http_requests_total{status=~"5.."}[5m])) by (job)) 
+        / 
+        (sum(rate(http_requests_total[5m])) by (job)) > 0.05
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is above 5% for {{ $labels.job }}"
+
+    - alert: PodCrashLooping
+      expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Pod crash looping"
+        description: "Pod {{ $labels.pod }} is crash looping"
+
+    - alert: NodeNotReady
+      expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Node not ready"
+        description: "Node {{ $labels.node }} is not ready"
