@@ -33,18 +33,6 @@ app.add_middleware(
 Instrumentator().instrument(app).expose(app, tags=["metrics"])
 
 
-@app.on_event("startup")
-async def startup_event():
-    """Application startup"""
-    logger.info("SecureDeploy API starting up...")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Application shutdown"""
-    logger.info("SecureDeploy API shutting down...")
-
-
 @app.get("/", tags=["root"])
 async def read_root():
     """Root endpoint"""

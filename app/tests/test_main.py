@@ -2,13 +2,17 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 
-client = TestClient(app)
+
+@pytest.fixture
+def client():
+    """FastAPI test client fixture"""
+    return TestClient(app)
 
 
 class TestRoot:
     """Tests for root endpoint"""
 
-    def test_root_endpoint(self):
+    def test_root_endpoint(self, client):
         response = client.get("/")
         assert response.status_code == 200
         data = response.json()
@@ -17,7 +21,7 @@ class TestRoot:
         assert "version" in data
         assert data["version"] == "1.0.0"
 
-    def test_root_contains_endpoints(self):
+    def test_root_contains_endpoints(self, client):
         response = client.get("/")
         assert response.status_code == 200
         data = response.json()
@@ -29,18 +33,18 @@ class TestRoot:
 class TestHealth:
     """Tests for health check endpoint"""
 
-    def test_health_endpoint_returns_200(self):
+    def test_health_endpoint_returns_200(self, client):
         response = client.get("/health")
         assert response.status_code == 200
 
-    def test_health_endpoint_returns_ok_status(self):
+    def test_health_endpoint_returns_ok_status(self, client):
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
         assert "status" in data
         assert data["status"] == "ok"
 
-    def test_health_endpoint_contains_timestamp(self):
+    def test_health_endpoint_contains_timestamp(self, client):
         response = client.get("/health")
         assert response.status_code == 200
         data = response.json()
@@ -58,7 +62,7 @@ class TestHealth:
 class TestInfo:
     """Tests for info endpoint"""
 
-    def test_info_endpoint(self):
+    def test_info_endpoint(self, client):
         response = client.get("/info")
         assert response.status_code == 200
         data = response.json()
