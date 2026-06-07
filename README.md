@@ -313,7 +313,6 @@ After completing this project, you'll understand:
 
 **Kovendhan P.**  
 *Aspiring Cloud & DevOps Engineer*  
-Jeppiaar Institute of Technology
 
 ---
 
