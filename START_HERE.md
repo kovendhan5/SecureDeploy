@@ -320,24 +320,4 @@ From App Live to Monitoring: +5 minutes
 **Your infrastructure is configured.**  
 **Your security is verified.**  
 
-### YOU'RE LITERALLY 50 MINUTES FROM PRODUCTION!
 
----
-
-## 🎯 FINAL DECISION
-
-**Choose one path above and click the link.**
-
-All three paths reach the same destination:  
-**YOUR APP RUNNING IN PRODUCTION ON AZURE**
-
-The only difference is:
-- **Path A:** Learn as you go (60 min, recommended)
-- **Path B:** Fast deployment (40 min)
-- **Path C:** Verify everything first (90 min)
-
----
-
-**Pick one. Click the link. Start now.**
-
-**Your future production app is waiting!** 🚀
