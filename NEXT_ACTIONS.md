@@ -357,11 +357,3 @@ You have a **production-grade DevSecOps pipeline** ready to deploy:
 → Sign off on deployment
 ```
 
----
-
-**Next action:** Pick one option above and open the document now! 🚀
-
-**Estimated time to production:** 40 minutes ⏱️
-
-**You've got this! Let's go!** 💪
-
