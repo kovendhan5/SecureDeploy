@@ -189,11 +189,3 @@ Before pushing to GitHub:
 🚀 TIME TO DEPLOY
 ```
 
----
-
-**Next Action:** Open [SECURITY_INDEX.md](SECURITY_INDEX.md)
-
-**Estimated Deployment Time:** 30 minutes
-
-**Expected Result:** 🎉 App running on AKS with monitoring!
-
