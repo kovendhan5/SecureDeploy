@@ -326,8 +326,3 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) file f
 
 Found a bug or have suggestions? Feel free to open an issue or submit a PR!
 
----
-
-## ⭐ Support
-
-If this project helped you learn, please star the repo and share it with others! 🌟
