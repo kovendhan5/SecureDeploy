@@ -321,8 +321,3 @@ After completing this project, you'll understand:
 This project is licensed under the MIT License — see [LICENSE](LICENSE) file for details.
 
 ---
-
-## 🤝 Contributing
-
-Found a bug or have suggestions? Feel free to open an issue or submit a PR!
-
