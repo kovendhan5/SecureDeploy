@@ -423,7 +423,3 @@ All systems go! You're cleared to proceed with deployment.
 
 ---
 
-**Congratulations on building an enterprise-grade DevSecOps pipeline!**
-
-**Time to make it live.** 🚀
-
