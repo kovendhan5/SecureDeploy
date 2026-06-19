@@ -413,13 +413,5 @@ All systems go! You're cleared to proceed with deployment.
 
 ## 🚀 Let's Ship It!
 
-### It's Time to Deploy Your Project! 🎯
 
-1. **Open:** [NEXT_ACTIONS.md](NEXT_ACTIONS.md)
-2. **Choose:** Your deployment path
-3. **Follow:** The step-by-step guide
-4. **Deploy:** Your app to Azure
-5. **Celebrate:** 🎉 You did it!
-
----
 
