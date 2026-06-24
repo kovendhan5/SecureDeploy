@@ -265,16 +265,7 @@ All validation checks passed. The project is:
 
 ---
 
-## 📞 Next Steps
 
-1. **Setup:** Follow [QUICK_START.md](QUICK_START.md)
-2. **Configure:** Set 6 GitHub Secrets
-3. **Deploy:** `terraform apply`
-4. **Push:** `git push origin main`
-5. **Monitor:** Watch GitHub Actions
-6. **Verify:** Check AKS deployment
-
----
 
 **Validation completed successfully.** 🎉
 
