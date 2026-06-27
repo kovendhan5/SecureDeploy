@@ -458,5 +458,3 @@ Questions? Check:
 - [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) - Detailed checklist
 - [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) - Troubleshooting
 
----
-
