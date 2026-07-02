@@ -27,3 +27,17 @@ variable "aks_principal_id" {
   description = "AKS kubelet managed identity principal ID for role assignment"
   type        = string
 }
+
+variable "acr_admin_password" {
+  description = "Optional ACR admin password to store in Key Vault"
+  type        = string
+  default     = null
+  sensitive   = true
+}
+
+variable "sonar_token" {
+  description = "Optional SonarCloud token to store in Key Vault"
+  type        = string
+  default     = null
+  sensitive   = true
+}

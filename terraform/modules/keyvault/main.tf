@@ -38,20 +38,21 @@ resource "azurerm_role_assignment" "current_user" {
   depends_on = [azurerm_key_vault.kv]
 }
 
-# Store example secrets (in real scenario, use GitHub Secrets or Azure DevOps)
 resource "azurerm_key_vault_secret" "acr_password" {
+  count        = var.acr_admin_password != null ? 1 : 0
   name         = "acr-admin-password"
-  value        = "placeholder-acr-password"  # Will be updated via GitHub Actions
+  value        = var.acr_admin_password
   key_vault_id = azurerm_key_vault.kv.id
 
   lifecycle {
-    ignore_changes = [value]  # Don't overwrite via Terraform after initial creation
+    ignore_changes = [value]
   }
 }
 
 resource "azurerm_key_vault_secret" "sonar_token" {
+  count        = var.sonar_token != null ? 1 : 0
   name         = "sonar-token"
-  value        = "placeholder-sonar-token"  # Update this with your actual SonarCloud token
+  value        = var.sonar_token
   key_vault_id = azurerm_key_vault.kv.id
 
   lifecycle {

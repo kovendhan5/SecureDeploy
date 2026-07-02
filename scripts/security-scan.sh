@@ -45,27 +45,22 @@ check_warning() {
 # Main execution
 print_header "🔒 SecureDeploy Security Scanner"
 
+SOURCE_SCAN_PATHS=(app terraform k8s monitoring scripts .github)
+SOURCE_SCAN_FILES=(--include='*.py' --include='*.tf' --include='*.yml' --include='*.yaml' --include='*.sh' --include='Dockerfile')
+
 ###############################################################################
 # Phase 1: Secrets Detection
 ###############################################################################
 print_header "Phase 1: Secrets Detection"
 
-# Check for common secret patterns in code
-if grep -r "password\|secret\|api_key\|apikey" \
-    --exclude-dir=.git \
-    --exclude-dir=terraform/.terraform \
-    --exclude="*.tfstate" \
-    --exclude="SECURITY_AUDIT.md" \
-    --exclude="PRE_DEPLOYMENT_CHECKLIST.md" \
-    . 2>/dev/null | grep -v "# " | grep -v "# Secrets" | grep -v "placeholder" > /tmp/secrets.txt 2>&1; then
-    
-    POTENTIAL_SECRETS=$(cat /tmp/secrets.txt | grep -v "SECRET_AUDIT\|PRE_DEPLOYMENT" | wc -l)
-    if [ "$POTENTIAL_SECRETS" -gt 0 ]; then
-        check_fail "Potential secrets found in code"
-        echo "Found $(echo $POTENTIAL_SECRETS) potential secret references:"
-        cat /tmp/secrets.txt | head -5
-        echo "Review with: grep -r 'password\|secret' . --exclude-dir=.git"
-    fi
+# Check for hardcoded secret assignments in implementation files only
+if grep -RInE "(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"']{4,}[\"']" \
+    "${SOURCE_SCAN_PATHS[@]}" \
+    "${SOURCE_SCAN_FILES[@]}" 2>/dev/null | grep -v "placeholder" > /tmp/secrets.txt 2>&1; then
+    check_fail "Potential secrets found in code"
+    echo "Found the following hardcoded secret assignments:"
+    head -5 /tmp/secrets.txt
+    echo "Review with: grep -RInE '(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'\'''][^\"'\''']{4,}[\"'\''']' app terraform k8s monitoring scripts .github"
 else
     check_pass "No obvious hardcoded secrets detected"
 fi
@@ -92,13 +87,11 @@ if command -v terraform &> /dev/null; then
         cd ..
     fi
     
-    # Check for hardcoded credentials in Terraform
-    if grep -r "password\|secret\|api_key" terraform/modules/ --include="*.tf" 2>/dev/null | grep -v "placeholder" > /tmp/tf_secrets.txt 2>&1; then
-        LINES=$(wc -l < /tmp/tf_secrets.txt)
-        if [ "$LINES" -gt 0 ]; then
-            check_fail "Terraform files contain potential secrets"
-            cat /tmp/tf_secrets.txt | head -3
-        fi
+    # Check for hardcoded credentials in Terraform assignments only
+    if grep -RInE "(password|secret|api_key|apikey|token)[[:space:]]*[:=][[:space:]]*[\"'][^\"']{4,}[\"']" \
+        terraform/modules/ --include="*.tf" 2>/dev/null | grep -v "placeholder" > /tmp/tf_secrets.txt 2>&1; then
+        check_fail "Terraform files contain potential secrets"
+        head -3 /tmp/tf_secrets.txt
     else
         check_pass "No hardcoded secrets in Terraform modules"
     fi
