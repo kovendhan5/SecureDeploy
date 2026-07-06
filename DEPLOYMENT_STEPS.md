@@ -449,12 +449,3 @@ After deployment:
 5. **Secure**: Review security logs weekly
 
 ---
-
-## 📞 Support
-
-Questions? Check:
-- [SECURITY_INDEX.md](SECURITY_INDEX.md) - Security overview
-- [QUICK_START.md](QUICK_START.md) - Quick reference
-- [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) - Detailed checklist
-- [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) - Troubleshooting
-
