@@ -167,13 +167,3 @@ Before pushing to GitHub:
 5. Study security controls: 30 min
 
 ---
-
-## 💡 Pro Tips
-
-1. **Cost Monitoring:** Check Azure Portal daily in first week
-2. **Security Pattern:** Always use Key Vault for secrets
-3. **Testing:** Test locally with `pytest tests/ -v` before pushing
-4. **Documentation:** Keep [SECURITY_INDEX.md](SECURITY_INDEX.md) handy
-5. **Alerts:** Monitor GitHub Actions for pipeline failures
-
----
