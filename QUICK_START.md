@@ -145,15 +145,3 @@ After deployment, you should see:
 - ✅ Grafana dashboard: http://localhost:3000 (after port-forward)
 
 ---
-
-## 📋 Pre-Deploy Checklist (Must Do)
-
-Before pushing to GitHub:
-- [ ] Run `bash scripts/security-scan.sh` ← Must pass
-- [ ] Read [SECURITY_VERIFICATION.md](SECURITY_VERIFICATION.md)
-- [ ] Configure 6 GitHub Secrets completely
-- [ ] Run `terraform plan` (review carefully)
-- [ ] Create Azure Service Principal
-- [ ] Verify local environment setup
-
----
