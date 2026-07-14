@@ -268,6 +268,3 @@ All validation checks passed. The project is:
 
 
 **Validation completed successfully.** 🎉
-
-Proceed to deployment when ready. →
-
