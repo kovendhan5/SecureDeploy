@@ -310,5 +310,3 @@ It's your master guide to:
 
 ---
 
-**Happy deploying! 🚀** 
-
