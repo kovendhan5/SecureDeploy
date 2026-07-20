@@ -184,7 +184,3 @@ This project is:
 **Time to deploy! 🚀**
 
 ---
-
-**Next Action:**
-→ Open [SECURITY_INDEX.md](SECURITY_INDEX.md) to start deployment
-
