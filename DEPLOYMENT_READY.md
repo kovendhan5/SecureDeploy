@@ -156,20 +156,6 @@ cat PRE_DEPLOYMENT_CHECKLIST.md # Phase by phase guide
 
 ---
 
-## 📞 Support
-
-### If You Find an Issue
-1. Check [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) for solutions
-2. Follow [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) phase instructions
-3. Use `scripts/security-scan.sh` to verify
-
-### During Deployment
-- Monitor GitHub Actions for pipeline status
-- Check Azure Activity Log for infrastructure changes
-- Review Kubernetes logs: `kubectl logs -l app=securedeploy-app`
-
----
-
 ## ✨ You're All Set!
 
 **Status:** 🟢 APPROVED FOR DEPLOYMENT
