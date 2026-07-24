@@ -46,25 +46,6 @@ Total:                        50 min
 
 ---
 
-## 📋 Three Ways to Proceed
-
-### Option 1: Guided Step-by-Step (40 min)
-**For:** Users who want clear instructions  
-**Read:** [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md)  
-**Then:** Follow each step in order
-
-### Option 2: Quick Reference (30 min)
-**For:** Experienced DevOps engineers  
-**Read:** [QUICK_START.md](QUICK_START.md)  
-**Then:** Execute 3-step deployment
-
-### Option 3: Comprehensive Checklist (60 min)
-**For:** Users who want full verification  
-**Read:** [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md)  
-**Then:** Follow 10-phase checklist
-
----
-
 ## 🎬 START HERE - Choose Your Path
 
 Pick one:
