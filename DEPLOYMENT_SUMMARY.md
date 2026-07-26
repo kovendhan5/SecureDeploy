@@ -312,11 +312,6 @@ Project Info
 
 ---
 
-### Which path will you take?
-
-1. **I want to learn everything** → [DEPLOYMENT_ACTIVATION.md](DEPLOYMENT_ACTIVATION.md)
-2. **I just want to deploy quickly** → [ACTION_CHECKLIST.md](ACTION_CHECKLIST.md)  
-3. **I need maximum verification** → [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md)
 
 ---
 
