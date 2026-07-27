@@ -311,8 +311,3 @@ Project Info
 **You're 40-90 minutes away from a live app on Azure.**
 
 ---
-
-
----
-
-**Pick one and start deploying!** 🚀
