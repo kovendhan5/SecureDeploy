@@ -258,18 +258,6 @@ Local: k:\Devops\SecureDeploy\
 
 ---
 
-## 🆘 SUPPORT
-
-| Need | Read |
-|---|---|
-| Step-by-step guide | DEPLOYMENT_ACTIVATION.md |
-| Quick checklist | ACTION_CHECKLIST.md |
-| Thorough verification | PRE_DEPLOYMENT_CHECKLIST.md |
-| Troubleshooting | SECURITY_REFERENCE.md |
-| General questions | START_HERE.md or README.md |
-
----
-
 ## 📂 DOCUMENT MAP
 
 ```
