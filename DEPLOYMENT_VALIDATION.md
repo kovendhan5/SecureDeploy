@@ -236,16 +236,6 @@ These are needed in your GitHub repository:
 
 ---
 
-## 🎯 Success Criteria
-
-After deployment, verify:
-- [ ] 2 pods running: `kubectl get pods`
-- [ ] Service has external IP: `kubectl get svc`
-- [ ] App responds: `curl http://<EXTERNAL_IP>/health`
-- [ ] Metrics available: Prometheus scraping
-- [ ] Grafana dashboard: Access on :3000
-- [ ] Alerts: Configured and active
-- [ ] Monitoring: Real-time metrics visible
 
 ---
 
