@@ -50,11 +50,6 @@ Total:                        50 min
 
 Pick one:
 
-### 👉 I want detailed instructions
-```
-Go to: DEPLOYMENT_STEPS.md
-Read: Step 1 - Create Service Principal
-```
 
 ### 👉 I'm experienced with DevOps
 ```
