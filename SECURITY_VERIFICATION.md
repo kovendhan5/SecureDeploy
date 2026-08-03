@@ -259,13 +259,6 @@ ls -la {SECURITY_AUDIT.md,PRE_DEPLOYMENT_CHECKLIST.md,scripts/security-scan.sh}
 
 ---
 
-## 📞 Support & Questions
-
-### During Deployment
-- Check GitHub Actions logs for pipeline status
-- Review Azure Activity Log for infrastructure changes
-- Monitor application logs: `kubectl logs -l app=securedeploy-app`
-
 ### Security Issues Found
 1. Fix the issue
 2. Re-run: `bash scripts/security-scan.sh`
