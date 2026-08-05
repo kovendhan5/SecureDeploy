@@ -257,14 +257,6 @@ git status
 ls -la {SECURITY_AUDIT.md,PRE_DEPLOYMENT_CHECKLIST.md,scripts/security-scan.sh}
 ```
 
----
-
-### Security Issues Found
-1. Fix the issue
-2. Re-run: `bash scripts/security-scan.sh`
-3. Git commit changes
-4. Push to GitHub (re-triggers pipeline)
-
 ### Compliance Questions
 All security patterns follow:
 - ✅ OWASP Top 10 prevention
