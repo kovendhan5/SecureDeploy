@@ -186,14 +186,6 @@ Code → GitLeaks → Build → SonarCloud → Trivy → Deploy → Monitor
 
 ## 🆘 Troubleshooting
 
-### "Security scan failed"
-→ See [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) Phase 7  
-→ Check [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) "Incident Response"
-
-### "GitLeaks blocked my commit"
-→ Remove the secret immediately  
-→ See [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) "If You Accidentally Commit a Secret"
-
 ### "Trivy image scan failed with CVE"
 → Check severities (HIGH/CRITICAL only block)  
 → See [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) "If Image Scan Fails with CVE"
