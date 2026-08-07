@@ -184,19 +184,6 @@ Code → GitLeaks → Build → SonarCloud → Trivy → Deploy → Monitor
 
 ---
 
-## 🆘 Troubleshooting
-
-### "Trivy image scan failed with CVE"
-→ Check severities (HIGH/CRITICAL only block)  
-→ See [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) "If Image Scan Fails with CVE"
-
-### "Kubernetes pod won't start"
-→ Check security context: `kubectl describe pod <pod-name>`  
-→ Verify UID 1000 running app  
-→ Check `readOnlyRootFilesystem` settings
-
----
-
 ## 📋 Security Documentation Checklist
 
 - [x] Security verification report created
@@ -243,8 +230,6 @@ Code → GitLeaks → Build → SonarCloud → Trivy → Deploy → Monitor
 
 ## 📞 Questions?
 
-1. **"Is it secure?"** → Yes, 95/100 security score. Read [SECURITY_VERIFICATION.md](SECURITY_VERIFICATION.md)
-2. **"What if I find an issue?"** → Follow procedures in [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md)
 3. **"How do I deploy safely?"** → Use [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md)
 4. **"What do these tools do?"** → See glossary in [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md)
 
