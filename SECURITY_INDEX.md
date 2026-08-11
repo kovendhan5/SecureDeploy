@@ -228,12 +228,5 @@ Code → GitLeaks → Build → SonarCloud → Trivy → Deploy → Monitor
 
 ---
 
-## 📞 Questions?
-
-3. **"How do I deploy safely?"** → Use [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md)
-4. **"What do these tools do?"** → See glossary in [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md)
-
----
-
 **Happy and secure deploying! 🔐**
 
