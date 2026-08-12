@@ -48,14 +48,7 @@ Total:                        50 min
 
 ## 🎬 START HERE - Choose Your Path
 
-Pick one:
-
-
-### 👉 I'm experienced with DevOps
-```
-Go to: QUICK_START.md
-Read: 3 Steps listed at top
-```
+Pick one:`
 
 ### 👉 I want to verify everything first
 ```
