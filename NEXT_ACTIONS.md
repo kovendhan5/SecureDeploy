@@ -46,18 +46,6 @@ Total:                        50 min
 
 ---
 
-## 🎬 START HERE - Choose Your Path
-
-Pick one:`
-
-### 👉 I want to verify everything first
-```
-Go to: PRE_DEPLOYMENT_CHECKLIST.md
-Read: Phase 1 - Pre-deployment checks
-```
-
----
-
 ## 📚 Documentation Map
 
 ```
