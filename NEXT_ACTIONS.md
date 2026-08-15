@@ -224,15 +224,6 @@ Optional but recommended:
 ---
 
 ## 📞 Questions?
-
-### "What do I do first?"
-- Go to: [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md)
-- Read: Step 1
-
-### "How do I verify it worked?"
-- Go to: Success Criteria (above)
-- Check: All 15 items
-
 ### "Something went wrong!"
 - Go to: [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md)
 - Read: Troubleshooting section
