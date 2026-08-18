@@ -223,17 +223,6 @@ Optional but recommended:
 
 ---
 
-## 📞 Questions?
-### "Something went wrong!"
-- Go to: [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md)
-- Read: Troubleshooting section
-
-### "How does this work?"
-- Go to: [SECURITY_INDEX.md](SECURITY_INDEX.md)
-- Read: Architecture section
-
----
-
 ## 🔐 Security Reminders
 
 ### NEVER
