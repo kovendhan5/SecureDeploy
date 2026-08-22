@@ -225,12 +225,6 @@ Optional but recommended:
 
 ## 🔐 Security Reminders
 
-### NEVER
-
-❌ Commit credentials to Git  
-❌ Share GitHub Secrets in messages  
-❌ Hardcode passwords in code  
-❌ Deploy without running security scan  
 
 ### ALWAYS
 
