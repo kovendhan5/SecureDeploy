@@ -219,18 +219,6 @@ This project meets or exceeds:
 ---
 
 ## 📞 Support Documentation
-
-Lost? Here's where to look:
-
-| Question | Document |
-|---|---|
-| Where do I start? | [SECURITY_INDEX.md](SECURITY_INDEX.md) |
-| Is it secure? | [SECURITY_VERIFICATION.md](SECURITY_VERIFICATION.md) |
-| How do I deploy? | [PRE_DEPLOYMENT_CHECKLIST.md](PRE_DEPLOYMENT_CHECKLIST.md) |
-| What if something breaks? | [SECURITY_REFERENCE.md](SECURITY_REFERENCE.md) |
-| Quick overview? | [QUICK_START.md](QUICK_START.md) |
-| Complete project status? | [PROJECT_COMPLETE.md](PROJECT_COMPLETE.md) |
-
 ---
 
 ## ✅ Final Checklist
