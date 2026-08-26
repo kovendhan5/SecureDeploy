@@ -217,10 +217,6 @@ This project meets or exceeds:
 - ✅ Infrastructure as Code standards
 
 ---
-
-## 📞 Support Documentation
----
-
 ## ✅ Final Checklist
 
 Before deployment, confirm:
