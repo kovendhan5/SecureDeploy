@@ -273,9 +273,6 @@ You have everything you need:
 
 ---
 
-## 🎯 Your Next Action
-
----
 
 **Status:** 🟢 **COMPLETE**
 
