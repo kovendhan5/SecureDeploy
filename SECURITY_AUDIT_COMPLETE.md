@@ -276,10 +276,5 @@ You have everything you need:
 
 **Status:** 🟢 **COMPLETE**
 
-**Recommendation:** Deploy with confidence!
-
-**Quote to remember:**
-> "Security is not a destination; it's a journey. This project sets you on the right path."
-
 ---
 
