@@ -214,12 +214,6 @@ Optional but recommended:
 3. Follow: Step 1 (Create Service Principal)
 4. Come back when you need the next step
 
-### For Experienced DevOps
-
-1. Open: [QUICK_START.md](QUICK_START.md)
-2. Execute: All 3 steps
-3. Monitor: GitHub Actions
-4. Done!
 
 -
 ---
