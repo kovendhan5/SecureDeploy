@@ -207,13 +207,6 @@ Optional but recommended:
 
 ## 🎯 Recommended Next Action
 
-### For First-Timers
-
-1. Open: [DEPLOYMENT_STEPS.md](DEPLOYMENT_STEPS.md)
-2. Read: Entire document (10 min)
-3. Follow: Step 1 (Create Service Principal)
-4. Come back when you need the next step
-
 
 -
 ---
